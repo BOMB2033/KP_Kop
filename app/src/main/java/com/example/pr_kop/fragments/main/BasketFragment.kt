@@ -58,25 +58,44 @@ class BasketFragment : Fragment() {
             adapter = ProductAdapter(userViewModel.data.value!!.productList,false,object : ProductAdapter.Listener{
                 override fun addBasket(product: Product) {
                     userViewModel.removeProduct(product.id)
-                    adapter.submitList(productViewModel.data.value?.filter {
+                    val listBasket = productViewModel.data.value?.filter {
                         for ( forItem in userViewModel.data.value?.productList!!)
                             if ((forItem == it.id))
                                 return@filter true
                         return@filter false
-                    })
+                    }
+                    adapter.submitList(listBasket)
+
                     adapter.updateData()
+                    var sum = 0.0
+                    listBasket!!.forEach{
+                        for (itemList in userViewModel.data.value?.productList!!)
+                            if (itemList == it.id)
+                                sum += it.price
+                    }
+                    textViewSum.text = sum.toString()
 
                 }
             })
             recyclerView.adapter = adapter
             productViewModel.data.observe(viewLifecycleOwner){list ->
-                adapter.submitList(list.filter { product ->
+                val listBasket = list.filter { product ->
                     for ( forItem in userViewModel.data.value?.productList!!)
                         if ((forItem == product.id))
                             return@filter true
                     return@filter false
-                })
+                }
+                adapter.submitList(listBasket)
+
+                var sum = 0.0
+                listBasket.forEach{
+                    for (itemList in userViewModel.data.value?.productList!!)
+                        if (itemList == it.id)
+                            sum += it.price
+                }
+                textViewSum.text = sum.toString()
             }
+
         }
     }
 

@@ -5,8 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.pr_kop.R
+import com.example.pr_kop.dataProduct.ProductRepository
+import com.example.pr_kop.dataProduct.ProductViewModel
+import com.example.pr_kop.dataUser.User
+import com.example.pr_kop.dataUser.UserRepository
+import com.example.pr_kop.dataUser.UserViewModel
 import com.example.pr_kop.databinding.FragmentRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -22,7 +28,8 @@ private const val ARG_PARAM2 = "param2"
  */
 class RegistrationFragment : Fragment() {
     private lateinit var binding: FragmentRegistrationBinding
-    // TODO: Rename and change types of parameters
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val productViewModel: ProductViewModel by activityViewModels()
     private var param1: String? = null
     private var param2: String? = null
 
@@ -46,17 +53,29 @@ class RegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(binding)
         {
-            buttonLogin.setOnClickListener{
+            buttonRegistration.setOnClickListener{
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(textViewEmail.text.toString(), textViewPassword.text.toString())
                     .addOnCompleteListener{ task ->
                         if (task.isSuccessful) {
+                            UserRepository().saveUserList(listOf(
+                                User(
+                                    FirebaseAuth.getInstance().currentUser!!.uid,
+                                    textViewName.text.toString(),
+                                    textViewFamaly.text.toString(),
+                                    textViewEmail.text.toString(),
+                                    textViewAddress.text.toString(),
+                                    emptyList(),
+                                    textViewPassword.text.toString(),
+
+                                )
+                            ))
                             it.findNavController().popBackStack()
                         } else {
                             // Обработка ошибки
                         }
                     }
             }
-            buttonRegistration.setOnClickListener{
+            buttonLogin.setOnClickListener{
                 it.findNavController().popBackStack()
             }
 
