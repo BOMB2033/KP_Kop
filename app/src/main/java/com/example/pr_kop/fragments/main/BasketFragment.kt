@@ -50,10 +50,6 @@ class BasketFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
-            buttonSearch.setOnClickListener {
-                adapter.updateData()
-
-            }
 
             adapter = ProductAdapter(userViewModel.data.value!!.productList,false,object : ProductAdapter.Listener{
                 override fun addBasket(product: Product) {
@@ -74,9 +70,10 @@ class BasketFragment : Fragment() {
                                 sum += it.price
                     }
                     textViewSum.text = sum.toString()
-
+                    textViewCount.text = userViewModel.data.value!!.productList.size.toString()
                 }
             })
+
             recyclerView.adapter = adapter
             productViewModel.data.observe(viewLifecycleOwner){list ->
                 val listBasket = list.filter { product ->
@@ -94,6 +91,7 @@ class BasketFragment : Fragment() {
                             sum += it.price
                 }
                 textViewSum.text = sum.toString()
+                textViewCount.text = userViewModel.data.value!!.productList.size.toString()
             }
 
         }

@@ -26,7 +26,7 @@ class ProductViewHolder(private val binding: ProductItemBinding)
             if (isHome){
                 price.text = "${product.price}р"
                 sum.text = ""
-                basket.text = "В корзину"
+                basket.text = "Добавить"
             }else{
                 var count = 0
                 listCount.forEach {
@@ -40,7 +40,7 @@ class ProductViewHolder(private val binding: ProductItemBinding)
             }
 
             name.text = product.name
-            description.text = product.description
+           // description.text = product.description
             basket.setOnClickListener{
                 listener.addBasket(product)
             }
